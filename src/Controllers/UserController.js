@@ -1,7 +1,7 @@
 const BookModel = require("../Models/BooksModel")
 const ReviewModel = require("../Models/ReviewModel")
 const UserModel = require("../Models/UserModel")
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken')
 
 //========================================================validator and regex====================================================//
@@ -14,7 +14,7 @@ const isValidPassword = function (password) {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     return passwordRegex.test(password);
 };
-
+let ab=/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/
 //========================================================create user====================================================//
 const createUser = async (req, res) => {
     try {
@@ -32,10 +32,10 @@ const createUser = async (req, res) => {
             return res.status(400).send({ status: false, message: "password is required" })
         if (!isValid(title))
             return res.status(400).send({ status: false, message: "title is required" })
-        else {
-            if (title != "Mr" && title != "Mrs" && title != "Miss") return res.status(400).send({ status: false, message: "Enter Mr, Mrs, Miss as a title" })
-        }
-        if (!/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phone)) {
+        // else {
+            //if (title != "Mr" && title != "Mrs" && title != "Miss") return res.status(400).send({ status: false, message: "Enter Mr, Mrs, Miss as a title" })
+      //  }
+        if (!phone.match(ab)) {
             return res.status(400).send({ status: false, message: "Enter valid phone number" })
         }
         if (!isValidPassword(password))

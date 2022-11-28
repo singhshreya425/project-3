@@ -6,7 +6,7 @@ const UserController = require("../Controllers/UserController")
 
 
 
-router.post ("/register")
+router.post ("/register",UserController.createUser)
 router.post ("/login")
 router.post ("/books")
 router.get ("/books")
