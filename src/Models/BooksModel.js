@@ -3,8 +3,10 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 const bookSchema = new mongoose.Schema({
 
-  title: { type: string, 
-    unique: true },
+  title: { 
+    type: string, 
+    unique: true 
+  },
   excerpt: { type: string },
   userId: {
     ObjectId,
@@ -33,4 +35,4 @@ const bookSchema = new mongoose.Schema({
 }
   , { timestamps: true });
 
-module.exports = mongoose.model("book", bookSchema)
+module.exports = mongoose.model("Book", bookSchema)

@@ -3,32 +3,35 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const userSchema = new mongoose.Schema({
 
     title: {
-        type: string,
+        type: String,
         required: true,
         enum: ['Mr', 'Mrs', 'Miss'],
         trim: true
     },
-    name: { type: string },
+    name: {
+        type: String,
+        required: true 
+    },
     phone: {
-        type: string,
-        unique: true
+        type: String,
+        unique: true,
+        required: true
     },
     email: {
-        type: string,
+        type: String,
         required: true,
         unique: true,
         trim: true
     },
     password: {
-        type: string,
-        length: { minLen: 8, maxLen: 15 }
+        type: String,
+        required:true,
+        // length: { minLen: 8, maxLen: 15 }
     },
     address: {
-        street: { string },
-        city: { string },
-        pincode: { string }
-    },
-
-
+        street: { String },
+        city: { String },
+        pincode: { String }
+    }
 }, { timestamps: true })
-module.exports = mongoose.model('user', userSchema)
+module.exports = mongoose.model('User', userSchema)
