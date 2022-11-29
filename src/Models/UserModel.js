@@ -29,9 +29,15 @@ const userSchema = new mongoose.Schema({
         // length: { minLen: 8, maxLen: 15 }
     },
     address: {
-        street: { String },
-        city: { String },
-        pincode: { String }
+        street:{ 
+            type:String 
+        },
+        city: { 
+            type:String 
+        },
+        pincode: { 
+            type:String 
+        }
     }
 }, { timestamps: true })
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('Puser', userSchema)

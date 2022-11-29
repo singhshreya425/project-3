@@ -42,7 +42,7 @@ const createBooks=async function(req,res){
         return res.status(400).send({status:false,msg:"invalid string type"})
     }
     let verifySubcategory=regexForString.test(subcategory)
-    if(!verifyString){
+    if(!verifySubcategory){
         return res.status(400).send({status:false,msg:"invalid subcategory type"})
     }
     let verifycategory=regexForString.test(category)
@@ -70,7 +70,7 @@ catch(error){
 return res.status(500).send({status:false,msg:error.message})
 }
 }
-module.exports.createBooks=createBooks
+
 
 
 
@@ -79,7 +79,7 @@ const getBook=async function(req,res){
         let query=req.query
         const { userId,category, subcategory } = req.query
         if (!userId && !category && !subcategory ) {
-            const getAllBooks= await blogModel.find({isDeleted: false}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0})
+            const getAllBooks= await BookModel.find({isDeleted: false}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0})
             return res.status(200).send({ status: true, data: getAllBooks })
         }
         if(category){
@@ -109,6 +109,7 @@ const getBook=async function(req,res){
     }
 }
 module.exports.getBook=getBook
+module.exports.createBooks=createBooks
 
 
 

@@ -14,7 +14,7 @@ const isValidPassword = function (password) {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     return passwordRegex.test(password);
 };
-let ab=/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/
+//let ab=/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/
 //========================================================create user====================================================//
 const createUser = async (req, res) => {
     try {
@@ -35,9 +35,9 @@ const createUser = async (req, res) => {
         // else {
             //if (title != "Mr" && title != "Mrs" && title != "Miss") return res.status(400).send({ status: false, message: "Enter Mr, Mrs, Miss as a title" })
       //  }
-        if (!phone.match(ab)) {
-            return res.status(400).send({ status: false, message: "Enter valid phone number" })
-        }
+        // if (!phone.match(ab)) {
+        //     return res.status(400).send({ status: false, message: "Enter valid phone number" })
+        // }
         if (!isValidPassword(password))
             return res.status(400).send({ status: false, message: "Password Should contain min 1 uppercase , lowercase and one special character" })
         const pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
