@@ -8,13 +8,22 @@ const UserController = require("../Controllers/UserController")
 
 router.post ("/register",UserController.createUser)
 router.post ("/login")
-router.post ("/books")
-router.get ("/books")
-router.get ("/books/:bookId")
-router.put ("/books/:bookId")
+router.post ("/books",BookController.createBooks)
+router.get ("/books",BookController.getBook)
+router.get ("/books/:bookId",BookController.getBookData)
+router.put ("/books/:bookId",BookController.updateBooks)
 router.delete ("/books/:bookId")
 router.post ("/books/:bookId/review")
 router.put ("/books/:bookId/review/:reviewId")
 router.delete ("/books/:bookId/review/:reviewId")
+
+router.all("/*", function (req, res) {
+    try{
+    res.status(404).send({
+        status: false,
+        msg: "The api you request is not available"
+    })
+}catch(err){res.send(err.message)}
+})
 
 module.exports=router
