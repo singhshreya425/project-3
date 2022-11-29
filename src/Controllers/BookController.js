@@ -121,6 +121,7 @@ const getBook=async function(req,res){
 }
 
 module.exports.getBook=getBook
+module.exports.createBooks=createBooks
 
 const getBookData = async (req,res)=>{
     try {
