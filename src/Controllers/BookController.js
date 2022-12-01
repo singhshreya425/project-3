@@ -1,8 +1,9 @@
-const { isValidObjectId } = require("mongoose")
+const { isValidObjectId, default: mongoose } = require("mongoose")
 const { isBoolean } = require("../../../project-01/src/Validation/Valid")
 const BookModel =require("../Models/BooksModel")
 const ReviewModel =require("../Models/ReviewModel")
 const UserModel = require("../Models/UserModel")
+// const mongoose = require ( mongoose )
 
 
 
@@ -121,13 +122,15 @@ const getBook=async function(req,res){
 }
 
 module.exports.getBook=getBook
-module.exports.createBooks=createBooks
+
+
 
 const getBookData = async (req,res)=>{
     try {
         const BookId = req.params.bookId
-        if (!BookId) {
-            return res.status(400).send({status :false , msg: "Enter blog BookId" })
+        //const iid=mong
+        if (!BookId.match(regexForString)) {
+            return res.status(400).send({status :false , msg: "Enter BookId" })
         }
     
         if (!isValidObjectId(BookId)) {
@@ -211,4 +214,36 @@ const updateBooks = async function (req, res) {
 module.exports.updateBooks=updateBooks
 
 
+const deleteBook = async function (req, res) {
+    try {
+        let bookId = req.params.bookId
 
+        if (!bookId) {
+            return res.status(400).send({ status: false, message: "please provide a bookId in params" })
+        };
+
+        if (!isValidObjectId(bookId)) {
+            return res.status(400).send({status :false , msg: "Enter Valid BookId" })
+        }
+
+        let findbookId = await BookModel.findById(bookId)
+        if (!findbookId) {
+            return res.status(404).send({ status: false, msg: "no book present with this id" })
+        }
+
+        const checkBookId = await BookModel.findOne({ _id: bookId, isDeleted: false })
+
+        if (!checkBookId) {
+            return res.status(404).send({ status: false, message: "book does not exist" })
+        }
+
+        let deletedBook = await BookModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true } }, { new: true });
+
+        return res.status(200).send({ status: true, message: "book sucessfully deleted", deletedBook });
+
+    } catch (error) {
+        return res.status(500).send(error.message)
+    }
+}
+
+module.exports.deleteBook=deleteBook
