@@ -8,7 +8,7 @@ let regexvalidName = /^[a-zA-Z]+([\s][a-zA-Z,]+)*$/;
 
 let regexValidNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 
-const regexValidEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]{2,5})*$/ 
+const regexValidEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]{2,3})*$/ 
 
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,15}$/;
 
@@ -39,7 +39,8 @@ const createUser = async (req, res) => {
         if (title !=="Mrs" &&title !=="Mr" &&title !=="Miss") 
         return res.status(400).send({ status: false, message: "enter valid title" })
       
-        if (!phone.match(regexValidNumber)) return res.status(400).send({ status: false, msg: "please enetr a valid phone number" })
+        if (!phone.match(regexValidNumber)) 
+        return res.status(400).send({ status: false, msg: "please enetr a valid phone number" })
 
         if (!password.match(passwordRegex))
             return res.status(400).send({ status: false, message: "Password Should contain min 1 uppercase , lowercase and one special character" })
@@ -57,7 +58,7 @@ const createUser = async (req, res) => {
         return res.status(201).send({ status: true, message: "User Created Successfully", data: create })
 
     } catch (error) {
-        return res.status(500).send({ satatus: false, msg: error.message })
+        return res.status(500).send({ status: false, msg: error.message })
     }
 }
 

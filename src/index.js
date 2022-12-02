@@ -1,11 +1,10 @@
 const express = require("express")
-const bodyParser = require("body-parser")
+// const bodyParser = require("body-parser")
 const route = require("./routes/route")
-
-const app = express()
 const mongoose = require("mongoose")
+const app = express()
 
-app.use (bodyParser.json())
+app.use (express.json())
 // app.use(bodyParser.urlencoded({extended : true}))
 
 mongoose.connect("mongodb+srv://singhshreya425:shreyasingh1234@cluster0.yxxvuvg.mongodb.net/shreya526",{useNewUrlParser:true})
@@ -13,4 +12,4 @@ mongoose.connect("mongodb+srv://singhshreya425:shreyasingh1234@cluster0.yxxvuvg.
 .catch (err=> console.log(err.message))
 
 app.use ("/",route)
-app.listen(process.env.PORT||3001, function(){console.log("express is running on port "+ (process.env.PORT||3001))})
+app.listen(process.env.PORT||3000, function(){console.log("express is running on port "+ (process.env.PORT||3000))})

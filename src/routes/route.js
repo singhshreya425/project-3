@@ -2,12 +2,12 @@ const express = require ("express")
 const router = express.Router()
 const BookController = require("../Controllers/BookController")
 const ReviewController=require("../Controllers/ReviewController")
-const UserController = require("../Controllers/UserController")
+const UserController = require("../controllers/userController")
 
 
 
 router.post ("/register",UserController.createUser)
-router.post ("/login")
+router.post ("/login",UserController.login)
 router.post ("/books",BookController.createBooks)
 router.get ("/books",BookController.getBook)
 router.get ("/booksss/:bookId",BookController.getBookData)

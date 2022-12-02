@@ -1,5 +1,5 @@
 const { isValidObjectId, default: mongoose } = require("mongoose")
-const { isBoolean } = require("../../../project-01/src/Validation/Valid")
+// const { isBoolean } = require("../../../project-01/src/Validation/Valid")
 const BookModel =require("../Models/BooksModel")
 const ReviewModel =require("../Models/ReviewModel")
 const UserModel = require("../Models/UserModel")
@@ -19,7 +19,7 @@ let regexForDate=/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/
 const createBooks=async function(req,res){
     try{
     let data=req.body
-    const {title,excerpt,userId,ISBN ,category,subcategory,isDeleted,releasedAt}=data
+    const {title,excerpt,userId,ISBN ,category,subcategory,releasedAt}=data
     if(data.length==0){
         return res.status(400).send({status:false,msg:"body is empty provide details to create book"})
     }
@@ -67,15 +67,15 @@ const createBooks=async function(req,res){
         return res.status(400).send({status:false,msg:"invalid subcategory type"})
     }
 
-    if(!isBoolean(isDeleted)){
-        return res.status(400).send({status:false,msg:"it contains only boolean value"})
-    }
+    // if(!isBoolean(isDeleted)){
+    //     return res.status(400).send({status:false,msg:"it contains only boolean value"})
+    // }
 
     if(!releasedAt.match(regexForDate)){
         return res.status(400).send({status:false,msg:"invalid date"})
     }
 
-     let verifyTitle=await BookModel.findOne({title:title})
+     let verifyTitle=await BookModel.findOne({$or:[{title:title},{ISBN:ISBN}]})//($or:[{title:title},{ISBN:ISBN}])
     if(verifyTitle){
         return res.status(400).send({status:false,msg:"title already exists"})
     }
@@ -114,7 +114,7 @@ const getBook=async function(req,res){
         if (Books.length == 0) {
             return res.status(400).send({ status: false, msg: 'books are not found' })   }
         
-        else res.status(200).send({ status: true, data: Books })
+        else return res.status(200).send({ status: true, data: Books })
     
     }catch (err) {
         res.status(500).send({ status: false, msg: err.message });
@@ -226,20 +226,24 @@ const deleteBook = async function (req, res) {
             return res.status(400).send({status :false , msg: "Enter Valid BookId" })
         }
 
-        let findbookId = await BookModel.findById(bookId)
-        if (!findbookId) {
-            return res.status(404).send({ status: false, msg: "no book present with this id" })
-        }
+        // let findbookId = await BookModel.findById(bookId)
+        // if (!findbookId) {
+        //     return res.status(404).send({ status: false, msg: "no book present with this id" })
+        // }
 
-        const checkBookId = await BookModel.findOne({ _id: bookId, isDeleted: false })
+        // const checkBookId = await BookModel.findOne({ _id: bookId, isDeleted: false })
 
-        if (!checkBookId) {
-            return res.status(404).send({ status: false, message: "book does not exist" })
-        }
+        // if (!checkBookId) {
+        //     return res.status(404).send({ status: false, message: "book does not exist" })
+        // }
 
-        let deletedBook = await BookModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true } }, { new: true });
-
-        return res.status(200).send({ status: true, message: "book sucessfully deleted", deletedBook });
+        let deletedBook = await BookModel.findOneAndUpdate({ _id: bookId ,isDeleted:false}, { $set: { isDeleted: true } });
+        // console.log(deletedBook)
+        if (!deletedBook) {
+                return res.status(404).send({ status: false, message: "book does not exist or already been deleted" })
+            }
+    
+        return res.status(200).send({ status: true, message: "book sucessfully deleted" });
 
     } catch (error) {
         return res.status(500).send(error.message)
