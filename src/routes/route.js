@@ -3,6 +3,7 @@ const router = express.Router()
 const BookController = require("../Controllers/BookController")
 const ReviewController=require("../Controllers/ReviewController")
 const UserController = require("../controllers/userController")
+const middleWare = require ("../Middleware/authmiddleware")
 
 
 
@@ -10,12 +11,12 @@ router.post ("/register",UserController.createUser)
 router.post ("/login",UserController.login)
 router.post ("/books",BookController.createBooks)
 router.get ("/books",BookController.getBook)
-router.get ("/booksss/:bookId",BookController.getBookData)
-router.put ("/books/:bookId",BookController.updateBooks)
-router.delete ("/books/:bookId",BookController.deleteBook)
+router.get ("/books/:bookId",BookController.getBookData)
+router.put ("/books/:bookId",middleWare.authenticate,BookController.updateBooks)
+router.delete ("/books/:bookId",middleWare.authenticate,BookController.deleteBook)
 router.post ("/books/:bookId/review",ReviewController.createReview)
-router.put ("/books/:bookId/review/:reviewId")
-router.delete ("/books/:bookId/review/:reviewId")
+router.put ("/books/:bookId/review/:reviewId",ReviewController.updateReview)
+router.delete ("/books/:bookId/review/:reviewId",ReviewController.deleteReview)
 
 router.all("/*", function (req, res) {
     try{

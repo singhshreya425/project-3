@@ -36,28 +36,13 @@ const createReview = async function (req, res) {
             if (!book) {
                 return res.status(404).send({ status: false, msg: "Book not exists" })
             }
-            
-          
-      
+        
             if(!(data.rating>0 && data.rating<=5)) 
             return res.status(400).send({ status: false, msg: "rating should be in between 1 to 5" })
 
-            
+            const newReview = await ReviewModel.create( data )
 
-const newReview = await ReviewModel.create( data )
-
-    //    const checkReviewCount = await ReviewModel.find({bookId: bookId, isDeleted: false}).count()
-
-    //    const incBookReviewCount = await BookModel.findOneAndUpdate({_id: bookId},{$set : {reviews : checkReviewCount}}, {new: true})
-
-        
-        // const{ ...data1 } = incBookReviewCount
-
-       
-        // data1._doc.reviewsData =  newReview
-        
-        
-        return res.status(201).send({status:true ,msg:"Review added Successfully",data:newReview})
+           return res.status(201).send({status:true ,msg:"Review added Successfully",data:newReview})
         }
    } catch (err) {
    res.status(500).send({ msg: "server error", error: err.message })
@@ -75,11 +60,7 @@ const updateReview = async function (req, res) {
             return res.status(400).send({ status: false, msg: "enter valid bookId" })
         }
 
-        // if (!validObjectId(bookId)) {
-        //     return res.status(400).send({ status: false, msg: "bookId is not in valid format" })
-        // }
-
-        const checkbookIdExist = await BookModel.findOne({ _id: bookId, isDeleted: false })
+        const checkbookIdExist = await BookModel.findOne({ _id: bookId,isDeleted: false })
         if (!checkbookIdExist) {
             return res.status(404).send({ status: false, msg: "book not found with this id" })
         }
