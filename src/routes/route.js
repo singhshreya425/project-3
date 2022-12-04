@@ -9,14 +9,14 @@ const middleWare = require ("../Middleware/authmiddleware")
 
 router.post ("/register",UserController.createUser)
 router.post ("/login",UserController.login)
-router.post ("/books",BookController.createBooks)
-router.get ("/books",BookController.getBook)
-router.get ("/books/:bookId",BookController.getBookData)
+router.post ("/books",middleWare.authenticate,BookController.createBooks)
+router.get ("/books",middleWare.authenticate,BookController.getBook)
+router.get ("/books/:bookId",middleWare.authenticate,BookController.getBookData)
 router.put ("/books/:bookId",middleWare.authenticate,BookController.updateBooks)
 router.delete ("/books/:bookId",middleWare.authenticate,BookController.deleteBook)
 router.post ("/books/:bookId/review",ReviewController.createReview)
-router.put ("/books/:bookId/review/:reviewId",ReviewController.updateReview)
-router.delete ("/books/:bookId/review/:reviewId",ReviewController.deleteReview)
+router.put ("/books/:bookId/review/:reviewId",ReviewController.reviewUpdate)
+router.delete ("/books/:bookId/review/:reviewId",ReviewController.reviewDelete)
 
 router.all("/*", function (req, res) {
     try{

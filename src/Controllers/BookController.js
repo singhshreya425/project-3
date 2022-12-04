@@ -19,7 +19,7 @@ const createBooks=async function(req,res){
     let data=req.body
     const {title,excerpt,userId,ISBN ,category,subcategory,releasedAt}=data
     if(data.length==0){
-        return res.status(400).send({status:false,msg:"body is empty provide details to create book"})
+        return res.status(400).send({status:false,msg:"please give some data to create a book"})
     }
     if(!title){
         return res.status(400).send({status:false,msg:"title is mandatory"})
@@ -79,9 +79,9 @@ const createBooks=async function(req,res){
         return res.status(400).send({status:false,msg:" ISBN already exists"})
     }
 
-    // if (req.decode.userId !== userId ) {
-    //     res.status(401).send({ status: false, msg: "Not Authorized" })
-    // }
+    if (req.decode.userId !== userId ) {
+        res.status(401).send({ status: false, msg: "Not Authorized" })
+    }
 
     const newBook=await BookModel.create(data)
     return res.status(201).send({status:true,msg:"book created successfully",data:newBook})
@@ -100,7 +100,7 @@ const getBook=async function(req,res){
         let query=req.query
         const { userId,category, subcategory } = req.query
         if (!userId && !category && !subcategory ) {
-            const getAllBooks= await BookModel.find({isDeleted: false}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0})
+            const getAllBooks= await BookModel.find({isDeleted: false}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0}).sort({title:1})
 
             return res.status(200).send({ status: true, data: getAllBooks})
         }
@@ -110,7 +110,7 @@ const getBook=async function(req,res){
             }
         
 
-        const Books = await BookModel.find({isDeleted : false,...query}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0})
+        const Books = await BookModel.find({isDeleted : false,...query}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0}).sort({title:1})
         if (Books.length == 0) {
             return res.status(400).send({ status: false, msg: 'books are not found' })   }
             
@@ -146,7 +146,7 @@ const getBookData = async (req,res)=>{
 
 
 
-       let final = await BookModel.findOne({ _id:BookId, isDeleted: false })
+       let final = await BookModel.findOne({ _id:BookId, isDeleted: false }).sort({title:1})
       
      final = JSON.parse(JSON.stringify(final));
      final.reviews=checkReviewCount
