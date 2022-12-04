@@ -15,7 +15,7 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, msg: "please provide some data" })
         }
         else {
-            let bookId = req.body.bookId
+            let bookId = req.params.bookId
             let bookId1 = req.params.bookId
             if (!bookId)
                 return res.status(400).send({ status: false, msg: " please enter bookId" })
@@ -95,12 +95,12 @@ const updateReview = async function (req, res) {
         const { reviewersName, rating, review } = data
         // let obj = {}
 
-        if (reviewersName) {
-            if (!isValid(reviewersName)) { 
-                return res.status(400).send({ status: false, msg: "name is not in valid format" })
-            }
-            obj.reviewedBy = reviewersName.trim()
-        }
+        // if (reviewersName) {
+        //     if (!isValid(reviewersName)) { 
+        //         return res.status(400).send({ status: false, msg: "name is not in valid format" })
+        //     }
+        //     obj.reviewedBy = reviewersName.trim()
+        // }
 
         // if (rating) {
         //     if (!isValid(rating)) {
@@ -136,7 +136,6 @@ const updateReview = async function (req, res) {
 }
 
 module.exports.updateReview=updateReview
-
 
 
 const deleteReview = async (req, res) => {
@@ -177,5 +176,6 @@ const deleteReview = async (req, res) => {
 
 
 module.exports.deleteReview=deleteReview 
+
 
 

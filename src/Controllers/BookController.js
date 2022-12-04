@@ -1,9 +1,7 @@
 const { isValidObjectId, default: mongoose } = require("mongoose")
-// const { isBoolean } = require("../../../project-01/src/Validation/Valid")
 const BookModel =require("../Models/BooksModel")
 const ReviewModel =require("../Models/ReviewModel")
 const UserModel = require("../Models/UserModel")
-// const mongoose = require ( mongoose )
 
 
 
@@ -81,9 +79,9 @@ const createBooks=async function(req,res){
         return res.status(400).send({status:false,msg:" ISBN already exists"})
     }
 
-    if (req.decode.userId !== userId ) {
-        res.status(401).send({ status: false, msg: "Not Authorized" })
-    }
+    // if (req.decode.userId !== userId ) {
+    //     res.status(401).send({ status: false, msg: "Not Authorized" })
+    // }
 
     const newBook=await BookModel.create(data)
     return res.status(201).send({status:true,msg:"book created successfully",data:newBook})
@@ -103,7 +101,8 @@ const getBook=async function(req,res){
         const { userId,category, subcategory } = req.query
         if (!userId && !category && !subcategory ) {
             const getAllBooks= await BookModel.find({isDeleted: false}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0})
-            return res.status(200).send({ status: true, data: getAllBooks })
+
+            return res.status(200).send({ status: true, data: getAllBooks})
         }
     
             if (!isValidObjectId(userId)) {
@@ -114,8 +113,8 @@ const getBook=async function(req,res){
         const Books = await BookModel.find({isDeleted : false,...query}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0})
         if (Books.length == 0) {
             return res.status(400).send({ status: false, msg: 'books are not found' })   }
-        
-        else return res.status(200).send({ status: true, data: Books })
+            
+        return res.status(200).send({ status: true, data: Books })
     
     }catch (err) {
         res.status(500).send({ status: false, msg: err.message });
@@ -142,17 +141,19 @@ const getBookData = async (req,res)=>{
 
         if (data.isDeleted == true) return res.status(404).send({ status: false, msg: "Book does not exist" })
 
-        // const checkReview = await ReviewModel.find({bookId: BookId, isDeleted: false})
-        // const checkReviewCount = await ReviewModel.find({bookId: BookId, isDeleted: false}).count()
-
-        // const incBookReviewCount = await BookModel.findOneAndUpdate({_id: BookId},{$set : {reviews : checkReviewCount,updateReview:checkReview}}, {new: true},{upsert:true})
+       const checkReview = await ReviewModel.find({bookId: BookId, isDeleted: false})
+       const checkReviewCount= await ReviewModel.find({bookId: BookId, isDeleted: false}).count()
 
 
-        
-           const result = await BookModel.find({_id:BookId})
-            res.status(200).send({ status: true, msg:result  })
-        
-    }
+
+       let final = await BookModel.findOne({ _id:BookId, isDeleted: false })
+      
+     final = JSON.parse(JSON.stringify(final));
+     final.reviews=checkReviewCount
+     final.updateReview=checkReview
+
+            res.status(200).send({ status: true, msg:final  })
+        }
     catch (err) {
         return res.status(500).send({ status: false, msg: err.message })
     }
@@ -244,11 +245,6 @@ const deleteBook = async function (req, res) {
         if (!checkBookId) {
             return res.status(404).send({ status: false, message: "book does not exist" })
         }
-
-        // let deletedBook = await BookModel.findOneAndUpdate({ _id: bookId ,isDeleted:false}, { $set: { isDeleted: true } });
-        // if (!deletedBook) {
-        //         return res.status(404).send({ status: false, message: "book does not exist or already been deleted" })
-        //     }
 
         let BooKis=await BookModel.findById(bookId)
         useridIs=BooKis.userId.toString()
