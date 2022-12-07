@@ -109,12 +109,11 @@ const getBook=async function(req,res){
                 return res.status(400).send({status :false , msg: "Enter A Valid userid" })
             }
         
+       let book=await BookModel.find({isDeleted:false,...query}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0}).sort({title:1})
+       if(book.length==0) return res.status(404).send({status:false,msg:"books are not found"})
 
-        const Books = await BookModel.find({isDeleted : false,...query}).select({ISBN:0,subcategory:0,deletedAt:0,isDeleted:0,createdAt:0,updatedAt:0}).sort({title:1})
-        if (Books.length == 0) {
-            return res.status(400).send({ status: false, msg: 'books are not found' })   }
-            
-        return res.status(200).send({ status: true, data: Books })
+       return res.status(200).send({status:true,data:book})
+        
     
     }catch (err) {
         res.status(500).send({ status: false, msg: err.message });
@@ -143,9 +142,9 @@ const getBookData = async (req,res)=>{
 
        const checkReview = await ReviewModel.find({bookId: BookId, isDeleted: false})
        const checkReviewCount= await ReviewModel.find({bookId: BookId, isDeleted: false}).count()
-
-
-
+       
+       
+       
        let final = await BookModel.findOne({ _id:BookId, isDeleted: false }).sort({title:1})
       
      final = JSON.parse(JSON.stringify(final));

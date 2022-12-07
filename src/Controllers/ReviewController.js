@@ -4,9 +4,9 @@ const UserModel = require("../Models/UserModel")
 const mongoose = require ("mongoose")
 
 
-function isValidObjectId(objectId) {
-    return mongoose.Types.ObjectId.isValid(objectId);
-}
+// function isValidObjectId(objectId) {
+//     return mongoose.Types.ObjectId.isValid(objectId);
+// }
 
 const createReview = async function (req, res) {
     try {
@@ -14,7 +14,7 @@ const createReview = async function (req, res) {
         if (Object.entries(data).length == 0) {
             return res.status(400).send({ status: false, msg: "please provide some data" })
         }
-        else {
+
             let bookId = req.params.bookId
             let bookId1 = req.body.bookId
             if (!bookId)
@@ -45,9 +45,8 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, msg: "rating should be in between 1 to 5" })
 
             const newReview = await ReviewModel.create( data )
-
-           return res.status(201).send({status:true ,msg:"Review added Successfully",data:newReview})
-        }
+            return res.status(201).send({status:true ,msg:"Review added Successfully",data:newReview})
+        
    } catch (err) {
    res.status(500).send({ msg: "server error", error: err.message })
    }
